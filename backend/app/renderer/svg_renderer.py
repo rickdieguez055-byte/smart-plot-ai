@@ -1,21 +1,28 @@
-"""Scalable Vector Graphics (SVG) 2D Floor Plan Renderer per SP-AI-07 and SP-AI-10."""
+"""Scalable Vector Graphics (SVG) 2D Floor Plan Renderer per SP-AI-07, SP-AI-10, and Phase 2 Standards."""
 import html
-from typing import List
+from typing import List, Optional
 from backend.app.schemas.plot import OrientationEnum, PlotInput
-from backend.app.schemas.response import MANDATORY_DISCLAIMER, RoomOutput
+from backend.app.schemas.response import (
+    CirculationPathOutput,
+    DoorOutput,
+    MANDATORY_DISCLAIMER,
+    RoomOutput,
+    SpatialBreakdownOutput,
+    WindowOutput,
+)
 
 
 class SVGFloorPlanRenderer:
-    """Renders proportionally scaled 2D architectural SVG floor plans with room labels, dimensions, and disclaimer."""
+    """Renders high-quality architectural 2D vector floor plans with structural walls, doors, windows, corridors, and disclaimer."""
 
     CATEGORY_COLORS = {
-        "bedroom": {"fill": "#EAE6F8", "stroke": "#5B4EB1", "text": "#312678"},
-        "bathroom": {"fill": "#E0F4F7", "stroke": "#0E7490", "text": "#155E75"},
-        "kitchen": {"fill": "#FEF3C7", "stroke": "#D97706", "text": "#92400E"},
-        "living": {"fill": "#E0F2FE", "stroke": "#0284C7", "text": "#0369A1"},
-        "parking": {"fill": "#F1F5F9", "stroke": "#64748B", "text": "#334155"},
-        "utility": {"fill": "#F3F4F6", "stroke": "#6B7280", "text": "#374151"},
-        "circulation": {"fill": "#FAF5FF", "stroke": "#9333EA", "text": "#6B21A8"},
+        "bedroom": {"fill": "#F5F3FF", "stroke": "#4F46E5", "text": "#312E81", "badge": "#EDE9FE"},
+        "bathroom": {"fill": "#ECFEFF", "stroke": "#0891B2", "text": "#164E63", "badge": "#CFFAFE"},
+        "kitchen": {"fill": "#FFFBEB", "stroke": "#D97706", "text": "#78350F", "badge": "#FEF3C7"},
+        "living": {"fill": "#F0F9FF", "stroke": "#0284C7", "text": "#0C4A6E", "badge": "#E0F2FE"},
+        "parking": {"fill": "#F8FAFC", "stroke": "#475569", "text": "#1E293B", "badge": "#E2E8F0"},
+        "utility": {"fill": "#F9FAFB", "stroke": "#6B7280", "text": "#1F2937", "badge": "#F3F4F6"},
+        "circulation": {"fill": "#FAF5FF", "stroke": "#7E22CE", "text": "#581C87", "badge": "#F3E8FF"},
     }
 
     @classmethod
@@ -25,7 +32,16 @@ class SVGFloorPlanRenderer:
         rooms: List[RoomOutput],
         total_built_area: float,
         utilization_percentage: float,
+        circulation_paths: Optional[List[CirculationPathOutput]] = None,
+        doors: Optional[List[DoorOutput]] = None,
+        windows: Optional[List[WindowOutput]] = None,
+        plan_title: str = "SmartPlot — 2D Architectural Layout",
+        spatial_breakdown: Optional[SpatialBreakdownOutput] = None,
     ) -> str:
+        circulation_paths = circulation_paths or []
+        doors = doors or []
+        windows = windows or []
+
         # Determine canvas dimensions with comfortable margins
         margin = 70.0
         header_height = 80.0
@@ -44,8 +60,6 @@ class SVGFloorPlanRenderer:
         viewbox_width = render_plot_width + (margin * 2)
         viewbox_height = render_plot_length + header_height + footer_height + (margin * 2)
 
-        # Coordinate transformation helper: SVG (0,0) is top-left
-        # Plot Y=0 is front (bottom in our visual orientation facing road)
         plot_origin_x = margin
         plot_origin_y = margin + header_height
 
@@ -63,9 +77,10 @@ class SVGFloorPlanRenderer:
             "</pattern>"
         )
         svg_parts.append(
-            '<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
-            '<path d="M 0 0 L 10 5 L 0 10 z" fill="#2563EB" />'
-            "</marker>"
+            '<pattern id="corridor_pattern" width="12" height="12" patternUnits="userSpaceOnUse">'
+            '<rect width="12" height="12" fill="#F8FAFC" />'
+            '<path d="M 0 12 L 12 0 M 6 12 L 12 6 M 0 6 L 6 0" fill="none" stroke="#E2E8F0" stroke-width="0.8" />'
+            "</pattern>"
         )
         svg_parts.append("</defs>")
 
@@ -73,14 +88,20 @@ class SVGFloorPlanRenderer:
         svg_parts.append(f'<rect width="{viewbox_width:.1f}" height="{viewbox_height:.1f}" fill="url(#grid)" />')
 
         # Header Title & Plot Specs
+        clean_title = html.escape(plan_title)
         svg_parts.append(
-            f'<text x="{margin}" y="38" font-size="20" font-weight="700" fill="#0F172A">SmartPlot — 2D Architectural Layout</text>'
+            f'<text x="{margin}" y="36" font-size="20" font-weight="700" fill="#0F172A">{clean_title}</text>'
         )
+
+        # Metrics subtitle
+        cov_info = f"Ground Coverage: {utilization_percentage:.1f}%"
+        if spatial_breakdown:
+            cov_info = f"Net Rooms: {spatial_breakdown.net_room_area:.1f} {unit}² | Corridors: {spatial_breakdown.circulation_area:.1f} {unit}² | Walls: {spatial_breakdown.wall_area:.1f} {unit}²"
+
         svg_parts.append(
-            f'<text x="{margin}" y="60" font-size="12" fill="#64748B">'
+            f'<text x="{margin}" y="58" font-size="11" fill="#64748B">'
             f'Plot: {p_width:.1f} × {p_length:.1f} {unit} ({plot.plot_width * plot.plot_length:.1f} {unit}²) | '
-            f'Built Area: {total_built_area:.1f} {unit}² | Ground Coverage: {utilization_percentage:.1f}% | '
-            f'Entrance: {plot.entrance_orientation.value}'
+            f'{cov_info} | Entrance: {plot.entrance_orientation.value}'
             f"</text>"
         )
 
@@ -96,7 +117,6 @@ class SVGFloorPlanRenderer:
         )
 
         # Dimension Lines for Plot Outer Boundary
-        # Top dimension (Width)
         svg_parts.append(
             f'<line x1="{plot_origin_x}" y1="{plot_origin_y - 12}" x2="{plot_origin_x + render_plot_width}" y2="{plot_origin_y - 12}" '
             f'stroke="#64748B" stroke-width="1.5" />'
@@ -107,7 +127,6 @@ class SVGFloorPlanRenderer:
             f"</text>"
         )
 
-        # Left dimension (Length)
         svg_parts.append(
             f'<line x1="{plot_origin_x - 12}" y1="{plot_origin_y}" x2="{plot_origin_x - 12}" y2="{plot_origin_y + render_plot_length}" '
             f'stroke="#64748B" stroke-width="1.5" />'
@@ -118,17 +137,34 @@ class SVGFloorPlanRenderer:
             f"</text>"
         )
 
-        # Render Rooms
+        # 1. Render Circulation Paths (Corridors and Foyers)
+        for cp in circulation_paths:
+            cpx = plot_origin_x + (cp.x * scale)
+            cpy = plot_origin_y + (render_plot_length - ((cp.y + cp.length) * scale))
+            cpw = cp.width * scale
+            cpl = cp.length * scale
+
+            svg_parts.append(
+                f'<rect x="{cpx:.1f}" y="{cpy:.1f}" width="{cpw:.1f}" height="{cpl:.1f}" '
+                f'fill="url(#corridor_pattern)" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2" />'
+            )
+            clean_cpname = html.escape(cp.name)
+            svg_parts.append(
+                f'<text x="{cpx + cpw / 2:.1f}" y="{cpy + cpl / 2:.1f}" font-size="9" font-weight="600" fill="#64748B" text-anchor="middle" letter-spacing="1">'
+                f'{clean_cpname.upper()} ({cp.width:.1f}\' WIDE)'
+                f"</text>"
+            )
+
+        # 2. Render Rooms (Architectural double structural walls)
         for room in rooms:
             rx = plot_origin_x + (room.x * scale)
-            # Invert Y so Y=0 is at bottom (front towards road)
             ry = plot_origin_y + (render_plot_length - ((room.y + room.length) * scale))
             rw = room.width * scale
             rh = room.length * scale
 
             color_theme = cls.CATEGORY_COLORS.get(room.category, cls.CATEGORY_COLORS["circulation"])
 
-            # Room background and structural walls
+            # Room background
             svg_parts.append(
                 f'<rect x="{rx:.1f}" y="{ry:.1f}" width="{rw:.1f}" height="{rh:.1f}" '
                 f'fill="{color_theme["fill"]}" stroke="{color_theme["stroke"]}" stroke-width="2.5" rx="2" />'
@@ -140,27 +176,75 @@ class SVGFloorPlanRenderer:
 
             clean_name = html.escape(room.name)
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y - 8:.1f}" font-size="11" font-weight="700" fill="{color_theme["text"]}" text-anchor="middle">{clean_name}</text>'
+                f'<text x="{center_x:.1f}" y="{center_y - 10:.1f}" font-size="11" font-weight="700" fill="{color_theme["text"]}" text-anchor="middle">{clean_name}</text>'
             )
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y + 8:.1f}" font-size="10" font-weight="500" fill="#475569" text-anchor="middle">'
+                f'<text x="{center_x:.1f}" y="{center_y + 6:.1f}" font-size="10" font-weight="500" fill="#475569" text-anchor="middle">'
                 f'{room.width:.1f} × {room.length:.1f} {unit}'
                 f"</text>"
             )
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y + 22:.1f}" font-size="9" fill="#94A3B8" text-anchor="middle">'
+                f'<text x="{center_x:.1f}" y="{center_y + 20:.1f}" font-size="9" fill="#94A3B8" text-anchor="middle">'
                 f'({room.area:.1f} {unit}²)'
                 f"</text>"
             )
 
-            # Door swing indication (drawn at corner)
-            door_size = min(14.0, rw * 0.25, rh * 0.25)
+        # 3. Render Windows on Exterior Walls (Blue Sill Line + Glazing)
+        for win in windows:
+            wx = plot_origin_x + (win.x * scale)
+            wy = plot_origin_y + (render_plot_length - (win.y * scale))
+            w_span = (win.width * scale) / 2.0
+
+            if win.wall in ["south", "north"]:
+                # Horizontal window sill
+                svg_parts.append(
+                    f'<line x1="{wx - w_span:.1f}" y1="{wy:.1f}" x2="{wx + w_span:.1f}" y2="{wy:.1f}" '
+                    f'stroke="#0284C7" stroke-width="4.0" stroke-linecap="square" />'
+                )
+                svg_parts.append(
+                    f'<line x1="{wx - w_span:.1f}" y1="{wy:.1f}" x2="{wx + w_span:.1f}" y2="{wy:.1f}" '
+                    f'stroke="#FFFFFF" stroke-width="1.0" />'
+                )
+            else:
+                # Vertical window sill
+                svg_parts.append(
+                    f'<line x1="{wx:.1f}" y1="{wy - w_span:.1f}" x2="{wx:.1f}" y2="{wy + w_span:.1f}" '
+                    f'stroke="#0284C7" stroke-width="4.0" stroke-linecap="square" />'
+                )
+                svg_parts.append(
+                    f'<line x1="{wx:.1f}" y1="{wy - w_span:.1f}" x2="{wx:.1f}" y2="{wy + w_span:.1f}" '
+                    f'stroke="#FFFFFF" stroke-width="1.0" />'
+                )
+
+        # 4. Render Doors with Cutout and Swing Arcs
+        for door in doors:
+            dx = plot_origin_x + (door.x * scale)
+            dy = plot_origin_y + (render_plot_length - (door.y * scale))
+            d_rad = min(door.width * scale, 24.0)
+
+            # Punch white opening through wall
+            if door.wall in ["north", "south"]:
+                svg_parts.append(
+                    f'<line x1="{dx - d_rad / 2:.1f}" y1="{dy:.1f}" x2="{dx + d_rad / 2:.1f}" y2="{dy:.1f}" '
+                    f'stroke="#FFFFFF" stroke-width="4.0" />'
+                )
+            else:
+                svg_parts.append(
+                    f'<line x1="{dx:.1f}" y1="{dy - d_rad / 2:.1f}" x2="{dx:.1f}" y2="{dy + d_rad / 2:.1f}" '
+                    f'stroke="#FFFFFF" stroke-width="4.0" />'
+                )
+
+            # Door leaf line and swing arc
             svg_parts.append(
-                f'<path d="M {rx:.1f} {ry + rh:.1f} A {door_size:.1f} {door_size:.1f} 0 0 1 {rx + door_size:.1f} {ry + rh - door_size:.1f}" '
-                f'fill="none" stroke="{color_theme["stroke"]}" stroke-width="1.2" stroke-dasharray="2,2" />'
+                f'<path d="M {dx - d_rad / 2:.1f} {dy:.1f} A {d_rad:.1f} {d_rad:.1f} 0 0 1 {dx + d_rad / 2:.1f} {dy - d_rad:.1f}" '
+                f'fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="2,2" />'
+            )
+            svg_parts.append(
+                f'<line x1="{dx - d_rad / 2:.1f}" y1="{dy:.1f}" x2="{dx + d_rad / 2:.1f}" y2="{dy - d_rad:.1f}" '
+                f'stroke="#0F172A" stroke-width="1.5" />'
             )
 
-        # Entrance Road & Arrow Indicator
+        # 5. Entrance Road & Arrow Indicator
         road_y = plot_origin_y + render_plot_length + 28
         svg_parts.append(
             f'<line x1="{plot_origin_x}" y1="{road_y}" x2="{plot_origin_x + render_plot_width}" y2="{road_y}" '
@@ -172,7 +256,7 @@ class SVGFloorPlanRenderer:
             f"</text>"
         )
 
-        # Footer Mandatory Disclaimer (SP-AI-10)
+        # 6. Footer Mandatory Disclaimer (SP-AI-10)
         disclaimer_y = viewbox_height - footer_height + 20
         svg_parts.append(
             f'<rect x="{margin}" y="{disclaimer_y}" width="{render_plot_width}" height="65" '

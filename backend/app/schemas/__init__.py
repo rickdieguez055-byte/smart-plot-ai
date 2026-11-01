@@ -2,6 +2,11 @@ from backend.app.schemas.plot import PlotInput, OrientationEnum, PlotUnit, Setba
 from backend.app.schemas.layout import LayoutRequirements, PlanGenerateRequest
 from backend.app.schemas.response import (
     RoomOutput,
+    DoorOutput,
+    WindowOutput,
+    CirculationPathOutput,
+    SpatialBreakdownOutput,
+    PlanAlternative,
     PlotDimensionsOutput,
     RecommendationOutput,
     PlanGenerateResponse,
@@ -17,6 +22,11 @@ __all__ = [
     "LayoutRequirements",
     "PlanGenerateRequest",
     "RoomOutput",
+    "DoorOutput",
+    "WindowOutput",
+    "CirculationPathOutput",
+    "SpatialBreakdownOutput",
+    "PlanAlternative",
     "PlotDimensionsOutput",
     "RecommendationOutput",
     "PlanGenerateResponse",
