@@ -58,7 +58,9 @@ workflows:
           mv SmartPlot_AI_v1.0.0_unsigned.ipa ../../ipa/
           ls -lh ../../ipa/
     artifacts:
+      - build/ipa/*.ipa
       - flutter_ai_module/build/ipa/*.ipa
+      - build/ios/iphoneos/Runner.app
       - flutter_ai_module/build/ios/iphoneos/Runner.app
       - /tmp/xcodebuild_logs/*.log
     publishing:
@@ -129,7 +131,9 @@ workflows:
             flutter build ipa --release
           fi
     artifacts:
+      - build/ios/ipa/*.ipa
       - flutter_ai_module/build/ios/ipa/*.ipa
+      - build/ipa/*.ipa
       - flutter_ai_module/build/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
     publishing:
