@@ -1,0 +1,236 @@
+{
+  "dummy_door": {
+    "model": "Dummy Majority",
+    "target": "is_connected",
+    "test_samples": 14368,
+    "positive_samples": 4478,
+    "negative_samples": 9890,
+    "class_imbalance_ratio": 0.3117,
+    "accuracy": 0.6883,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1_score": 0.0,
+    "roc_auc": 0.5,
+    "confusion_matrix": {
+      "true_negatives": 9890,
+      "false_positives": 0,
+      "false_negatives": 4478,
+      "true_positives": 0
+    }
+  },
+  "lr_door": {
+    "model": "Logistic Regression",
+    "target": "is_connected",
+    "test_samples": 14368,
+    "positive_samples": 4478,
+    "negative_samples": 9890,
+    "class_imbalance_ratio": 0.3117,
+    "accuracy": 0.8543,
+    "precision": 0.8836,
+    "recall": 0.6134,
+    "f1_score": 0.7241,
+    "roc_auc": 0.916,
+    "confusion_matrix": {
+      "true_negatives": 9528,
+      "false_positives": 362,
+      "false_negatives": 1731,
+      "true_positives": 2747
+    }
+  },
+  "rf_door": {
+    "model": "Random Forest",
+    "target": "is_connected",
+    "test_samples": 14368,
+    "positive_samples": 4478,
+    "negative_samples": 9890,
+    "class_imbalance_ratio": 0.3117,
+    "accuracy": 0.8683,
+    "precision": 0.9359,
+    "recall": 0.6199,
+    "f1_score": 0.7458,
+    "roc_auc": 0.9299,
+    "confusion_matrix": {
+      "true_negatives": 9700,
+      "false_positives": 190,
+      "false_negatives": 1702,
+      "true_positives": 2776
+    }
+  },
+  "dummy_adj": {
+    "model": "Dummy Majority",
+    "target": "is_adjacent",
+    "test_samples": 14368,
+    "positive_samples": 7572,
+    "negative_samples": 6796,
+    "class_imbalance_ratio": 0.527,
+    "accuracy": 0.527,
+    "precision": 0.527,
+    "recall": 1.0,
+    "f1_score": 0.6902,
+    "roc_auc": 0.5,
+    "confusion_matrix": {
+      "true_negatives": 0,
+      "false_positives": 6796,
+      "false_negatives": 0,
+      "true_positives": 7572
+    }
+  },
+  "lr_adj": {
+    "model": "Logistic Regression",
+    "target": "is_adjacent",
+    "test_samples": 14368,
+    "positive_samples": 7572,
+    "negative_samples": 6796,
+    "class_imbalance_ratio": 0.527,
+    "accuracy": 0.7365,
+    "precision": 0.8233,
+    "recall": 0.6367,
+    "f1_score": 0.7181,
+    "roc_auc": 0.8155,
+    "confusion_matrix": {
+      "true_negatives": 5761,
+      "false_positives": 1035,
+      "false_negatives": 2751,
+      "true_positives": 4821
+    }
+  },
+  "rf_adj": {
+    "model": "Random Forest",
+    "target": "is_adjacent",
+    "test_samples": 14368,
+    "positive_samples": 7572,
+    "negative_samples": 6796,
+    "class_imbalance_ratio": 0.527,
+    "accuracy": 0.7488,
+    "precision": 0.8323,
+    "recall": 0.6554,
+    "f1_score": 0.7334,
+    "roc_auc": 0.8363,
+    "confusion_matrix": {
+      "true_negatives": 5796,
+      "false_positives": 1000,
+      "false_negatives": 2609,
+      "true_positives": 4963
+    }
+  },
+  "slice_analysis_door": {
+    "bathroom_bedroom": {
+      "sample_count": 5340,
+      "true_positive_rate": 0.2137,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "bedroom_living": {
+      "sample_count": 2307,
+      "true_positive_rate": 0.9701,
+      "precision": 0.9933,
+      "recall": 0.9973,
+      "f1_score": 0.9953
+    },
+    "bathroom_living": {
+      "sample_count": 2043,
+      "true_positive_rate": 0.4376,
+      "precision": 0.6776,
+      "recall": 0.3926,
+      "f1_score": 0.4972
+    },
+    "bedroom_bedroom": {
+      "sample_count": 2027,
+      "true_positive_rate": 0.0005,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "bathroom_bathroom": {
+      "sample_count": 1485,
+      "true_positive_rate": 0.0007,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "bedroom_kitchen": {
+      "sample_count": 516,
+      "true_positive_rate": 0.0078,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "bathroom_kitchen": {
+      "sample_count": 426,
+      "true_positive_rate": 0.0023,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "kitchen_living": {
+      "sample_count": 200,
+      "true_positive_rate": 0.955,
+      "precision": 0.9598,
+      "recall": 1.0,
+      "f1_score": 0.9795
+    }
+  },
+  "top_features_door": [
+    {
+      "feature": "room2_category_living",
+      "importance": 0.2191
+    },
+    {
+      "feature": "pair_type_bedroom_living",
+      "importance": 0.1757
+    },
+    {
+      "feature": "room2_area_ratio",
+      "importance": 0.1271
+    },
+    {
+      "feature": "room1_area_ratio",
+      "importance": 0.0723
+    },
+    {
+      "feature": "pair_area_ratio",
+      "importance": 0.0578
+    },
+    {
+      "feature": "room1_category_bathroom",
+      "importance": 0.0531
+    },
+    {
+      "feature": "room2_category_bedroom",
+      "importance": 0.0494
+    },
+    {
+      "feature": "is_same_category",
+      "importance": 0.0344
+    },
+    {
+      "feature": "room1_category_bedroom",
+      "importance": 0.0334
+    },
+    {
+      "feature": "pair_type_bedroom_bedroom",
+      "importance": 0.0298
+    },
+    {
+      "feature": "pair_type_bathroom_living",
+      "importance": 0.0208
+    },
+    {
+      "feature": "total_rooms",
+      "importance": 0.0142
+    },
+    {
+      "feature": "pair_type_bathroom_bedroom",
+      "importance": 0.0137
+    },
+    {
+      "feature": "room2_category_kitchen",
+      "importance": 0.0109
+    },
+    {
+      "feature": "num_bathrooms",
+      "importance": 0.0101
+    }
+  ]
+}

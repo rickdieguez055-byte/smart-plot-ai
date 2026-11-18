@@ -123,4 +123,116 @@ class AiPlanApiService {
       );
     }
   }
+
+  /// Sends edited room geometry to backend for architectural validation and live layout recalculation
+  Future<PlanEditValidationResultModel> validatePlanEdit({
+    required PlotInput plot,
+    required int floor,
+    required int floorsCount,
+    required List<RoomModel> rooms,
+    List<RoomModel>? otherFloorRooms,
+    List<Map<String, dynamic>>? circulationPaths,
+    String? alternativeType,
+    String? originalPlanId,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/plans/validate-edit');
+    final payload = {
+      'plot': plot.toJson()['plot'],
+      'floor': floor,
+      'floors_count': floorsCount,
+      'rooms': rooms.map((r) => r.toJson()).toList(),
+      if (otherFloorRooms != null && otherFloorRooms.isNotEmpty)
+        'other_floor_rooms': otherFloorRooms.map((r) => r.toJson()).toList(),
+      if (circulationPaths != null && circulationPaths.isNotEmpty)
+        'circulation_paths': circulationPaths,
+      'alternative_type': alternativeType ?? 'open_living',
+      'original_plan_id': originalPlanId,
+    };
+
+    try {
+      final response = await http
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(payload),
+          )
+          .timeout(const Duration(seconds: 8));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return PlanEditValidationResultModel.fromJson(data);
+      } else {
+        return PlanEditValidationResultModel(
+          isValid: false,
+          errorCode: 'HTTP_${response.statusCode}',
+          rejectionReason: 'Validation request failed with status ${response.statusCode}.',
+        );
+      }
+    } catch (e) {
+      return PlanEditValidationResultModel(
+        isValid: false,
+        errorCode: 'NETWORK_ERROR',
+        rejectionReason: 'Could not connect to validation server: $e',
+      );
+    }
+  }
+
+  /// Applies verified edit, updating doors, windows, walls, and receiving new SVG drawing
+  Future<PlanEditValidationResultModel> applyPlanEdit({
+    required PlotInput plot,
+    required int floor,
+    required int floorsCount,
+    required List<RoomModel> rooms,
+    List<RoomModel>? otherFloorRooms,
+    List<Map<String, dynamic>>? circulationPaths,
+    String? alternativeType,
+    String? originalPlanId,
+  }) async {
+    final uri = Uri.parse('$baseUrl/api/v1/plans/apply-edit');
+    final payload = {
+      'plot': plot.toJson()['plot'],
+      'floor': floor,
+      'floors_count': floorsCount,
+      'rooms': rooms.map((r) => r.toJson()).toList(),
+      if (otherFloorRooms != null && otherFloorRooms.isNotEmpty)
+        'other_floor_rooms': otherFloorRooms.map((r) => r.toJson()).toList(),
+      if (circulationPaths != null && circulationPaths.isNotEmpty)
+        'circulation_paths': circulationPaths,
+      'alternative_type': alternativeType ?? 'open_living',
+      'original_plan_id': originalPlanId,
+    };
+
+    try {
+      final response = await http
+          .post(
+            uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode(payload),
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return PlanEditValidationResultModel.fromJson(data);
+      } else {
+        return PlanEditValidationResultModel(
+          isValid: false,
+          errorCode: 'HTTP_${response.statusCode}',
+          rejectionReason: 'Apply edit request failed with status ${response.statusCode}.',
+        );
+      }
+    } catch (e) {
+      return PlanEditValidationResultModel(
+        isValid: false,
+        errorCode: 'NETWORK_ERROR',
+        rejectionReason: 'Could not connect to validation server: $e',
+      );
+    }
+  }
 }

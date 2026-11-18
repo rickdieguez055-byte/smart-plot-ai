@@ -21,6 +21,9 @@ parts/
 sdist/
 var/
 wheels/
+*.whl
+data/wheels/
+data/resplan/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -55,3 +58,12 @@ build/
 # Operating System Files
 .DS_Store
 Thumbs.db
+
+# IDE & Editor Files
+.vscode/
+.idea/
+
+# Temporary UI Hierarchy Dumps
+*.xml
+docs/screenshots/*.xml
+

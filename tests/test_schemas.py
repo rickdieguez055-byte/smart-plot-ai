@@ -72,3 +72,14 @@ def test_layout_requirements_invalid_bedrooms():
         LayoutRequirements(bedrooms=0)
     with pytest.raises(ValidationError):
         LayoutRequirements(bedrooms=10)
+
+
+def test_layout_requirements_multi_floor_supported():
+    """Verify that multi-floor (floors=2) is supported in Phase 6, while floors > 2 is rejected."""
+    valid_req = LayoutRequirements(floors=2)
+    assert valid_req.floors == 2
+
+    with pytest.raises(ValidationError) as exc_info:
+        LayoutRequirements(floors=3)
+    assert "less than or equal to 2" in str(exc_info.value) or "Multi-floor generation" in str(exc_info.value)
+

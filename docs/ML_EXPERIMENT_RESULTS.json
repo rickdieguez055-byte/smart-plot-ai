@@ -1,0 +1,234 @@
+[
+  {
+    "plot_name": "5 Marla Standard (25x45)",
+    "plot_dimensions": "25.0x45.0",
+    "baseline_runtime_ms": 7.75,
+    "hybrid_runtime_ms": 1699.32,
+    "plan_a": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan A: Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 7,
+        "door_count": 9,
+        "window_count": 10,
+        "utilization_pct": 82.2,
+        "avg_bed_to_nearest_bath_dist_ft": 14.32,
+        "living_kitchen_dist_ft": 16.05
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan A: ML-Optimized Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 7,
+        "door_count": 9,
+        "window_count": 10,
+        "utilization_pct": 82.2,
+        "avg_bed_to_nearest_bath_dist_ft": 14.44,
+        "living_kitchen_dist_ft": 12.5
+      }
+    },
+    "plan_b": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan B: Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 8,
+        "door_count": 10,
+        "window_count": 11,
+        "utilization_pct": 82.2,
+        "avg_bed_to_nearest_bath_dist_ft": 13.88,
+        "living_kitchen_dist_ft": 26.72
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan B: ML-Optimized Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 8,
+        "door_count": 10,
+        "window_count": 11,
+        "utilization_pct": 82.2,
+        "avg_bed_to_nearest_bath_dist_ft": 13.88,
+        "living_kitchen_dist_ft": 26.72
+      }
+    }
+  },
+  {
+    "plot_name": "5 Marla Modern (25x50)",
+    "plot_dimensions": "25.0x50.0",
+    "baseline_runtime_ms": 0.5,
+    "hybrid_runtime_ms": 59.4,
+    "plan_a": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan A: Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 7,
+        "door_count": 9,
+        "window_count": 10,
+        "utilization_pct": 82.0,
+        "avg_bed_to_nearest_bath_dist_ft": 15.88,
+        "living_kitchen_dist_ft": 16.65
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan A: ML-Optimized Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 7,
+        "door_count": 9,
+        "window_count": 10,
+        "utilization_pct": 82.0,
+        "avg_bed_to_nearest_bath_dist_ft": 15.88,
+        "living_kitchen_dist_ft": 12.5
+      }
+    },
+    "plan_b": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan B: Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 8,
+        "door_count": 10,
+        "window_count": 11,
+        "utilization_pct": 82.0,
+        "avg_bed_to_nearest_bath_dist_ft": 14.49,
+        "living_kitchen_dist_ft": 27.96
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan B: ML-Optimized Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 8,
+        "door_count": 10,
+        "window_count": 11,
+        "utilization_pct": 82.0,
+        "avg_bed_to_nearest_bath_dist_ft": 14.49,
+        "living_kitchen_dist_ft": 27.96
+      }
+    }
+  },
+  {
+    "plot_name": "10 Marla Luxury (35x65)",
+    "plot_dimensions": "35.0x65.0",
+    "baseline_runtime_ms": 0.51,
+    "hybrid_runtime_ms": 58.07,
+    "plan_a": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan A: Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 9,
+        "door_count": 11,
+        "window_count": 12,
+        "utilization_pct": 74.5,
+        "avg_bed_to_nearest_bath_dist_ft": 18.89,
+        "living_kitchen_dist_ft": 23.0
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan A: ML-Optimized Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 9,
+        "door_count": 11,
+        "window_count": 12,
+        "utilization_pct": 74.5,
+        "avg_bed_to_nearest_bath_dist_ft": 18.75,
+        "living_kitchen_dist_ft": 16.0
+      }
+    },
+    "plan_b": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan B: Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 10,
+        "door_count": 12,
+        "window_count": 13,
+        "utilization_pct": 74.5,
+        "avg_bed_to_nearest_bath_dist_ft": 15.56,
+        "living_kitchen_dist_ft": 32.75
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan B: ML-Optimized Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 10,
+        "door_count": 12,
+        "window_count": 13,
+        "utilization_pct": 74.5,
+        "avg_bed_to_nearest_bath_dist_ft": 15.56,
+        "living_kitchen_dist_ft": 32.75
+      }
+    }
+  },
+  {
+    "plot_name": "1 Kanal Estate (50x90)",
+    "plot_dimensions": "50.0x90.0",
+    "baseline_runtime_ms": 1.02,
+    "hybrid_runtime_ms": 58.9,
+    "plan_a": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan A: Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 9,
+        "door_count": 11,
+        "window_count": 12,
+        "utilization_pct": 64.9,
+        "avg_bed_to_nearest_bath_dist_ft": 31.11,
+        "living_kitchen_dist_ft": 27.0
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan A: ML-Optimized Open Living Concept",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 9,
+        "door_count": 11,
+        "window_count": 12,
+        "utilization_pct": 64.9,
+        "avg_bed_to_nearest_bath_dist_ft": 30.93,
+        "living_kitchen_dist_ft": 20.0
+      }
+    },
+    "plan_b": {
+      "baseline": {
+        "system": "Baseline CP-SAT",
+        "layout_title": "Plan B: Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 10,
+        "door_count": 12,
+        "window_count": 13,
+        "utilization_pct": 64.9,
+        "avg_bed_to_nearest_bath_dist_ft": 27.78,
+        "living_kitchen_dist_ft": 36.75
+      },
+      "hybrid": {
+        "system": "Hybrid ML+CP-SAT",
+        "layout_title": "Plan B: ML-Optimized Privacy Focused",
+        "is_feasible": true,
+        "connectivity_verified": true,
+        "room_count": 10,
+        "door_count": 12,
+        "window_count": 13,
+        "utilization_pct": 64.9,
+        "avg_bed_to_nearest_bath_dist_ft": 27.78,
+        "living_kitchen_dist_ft": 36.75
+      }
+    }
+  }
+]

@@ -1,0 +1,606 @@
+{
+  "dataset_info": {
+    "training_plans": 14958,
+    "training_pairs": 213461,
+    "validation_plans": 998,
+    "validation_pairs": 14075,
+    "test_plans": 997,
+    "test_pairs": 14368
+  },
+  "validation_experiments": {
+    "rf_v1_repro": {
+      "config": {
+        "name": "rf_v1_repro",
+        "n_est": 100,
+        "max_depth": 12,
+        "min_split": 10,
+        "cw": null
+      },
+      "fit_time_seconds": 9.91,
+      "metrics_at_0.5": {
+        "threshold": 0.5,
+        "accuracy": 0.865,
+        "precision": 0.9265,
+        "recall": 0.6205,
+        "f1_score": 0.7432,
+        "roc_auc": 0.9286,
+        "brier_score": 0.093,
+        "confusion_matrix": {
+          "true_negatives": 9425,
+          "false_positives": 218,
+          "false_negatives": 1682,
+          "true_positives": 2750
+        }
+      },
+      "metrics_at_optimal_threshold": {
+        "threshold": 0.32,
+        "accuracy": 0.8504,
+        "precision": 0.7667,
+        "recall": 0.7543,
+        "f1_score": 0.7605,
+        "roc_auc": 0.9286,
+        "brier_score": 0.093,
+        "confusion_matrix": {
+          "true_negatives": 8626,
+          "false_positives": 1017,
+          "false_negatives": 1089,
+          "true_positives": 3343
+        }
+      },
+      "optimal_threshold": 0.31999999999999995,
+      "slices": {
+        "bathroom_bedroom": {
+          "total_samples": 5212,
+          "positive_count": 1147,
+          "positive_rate": 0.2201,
+          "precision": 0.4272,
+          "recall": 0.1508,
+          "f1_score": 0.2229
+        },
+        "bedroom_living": {
+          "total_samples": 2315,
+          "positive_count": 2214,
+          "positive_rate": 0.9564,
+          "precision": 0.9857,
+          "recall": 0.9995,
+          "f1_score": 0.9926
+        },
+        "bathroom_living": {
+          "total_samples": 2056,
+          "positive_count": 879,
+          "positive_rate": 0.4275,
+          "precision": 0.5123,
+          "recall": 0.8783,
+          "f1_score": 0.6471
+        },
+        "bedroom_bedroom": {
+          "total_samples": 1985,
+          "positive_count": 0,
+          "positive_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "kitchen_living": {
+          "total_samples": 183,
+          "positive_count": 175,
+          "positive_rate": 0.9563,
+          "precision": 0.9563,
+          "recall": 1.0,
+          "f1_score": 0.9777
+        }
+      }
+    },
+    "rf_balanced": {
+      "config": {
+        "name": "rf_balanced",
+        "n_est": 100,
+        "max_depth": 12,
+        "min_split": 10,
+        "cw": "balanced"
+      },
+      "fit_time_seconds": 10.87,
+      "metrics_at_0.5": {
+        "threshold": 0.5,
+        "accuracy": 0.8514,
+        "precision": 0.7702,
+        "recall": 0.7525,
+        "f1_score": 0.7612,
+        "roc_auc": 0.9285,
+        "brier_score": 0.1051,
+        "confusion_matrix": {
+          "true_negatives": 8648,
+          "false_positives": 995,
+          "false_negatives": 1097,
+          "true_positives": 3335
+        }
+      },
+      "metrics_at_optimal_threshold": {
+        "threshold": 0.5,
+        "accuracy": 0.8514,
+        "precision": 0.7702,
+        "recall": 0.7525,
+        "f1_score": 0.7612,
+        "roc_auc": 0.9285,
+        "brier_score": 0.1051,
+        "confusion_matrix": {
+          "true_negatives": 8648,
+          "false_positives": 995,
+          "false_negatives": 1097,
+          "true_positives": 3335
+        }
+      },
+      "optimal_threshold": 0.49999999999999983,
+      "slices": {
+        "bathroom_bedroom": {
+          "total_samples": 5212,
+          "positive_count": 1147,
+          "positive_rate": 0.2201,
+          "precision": 0.4307,
+          "recall": 0.1517,
+          "f1_score": 0.2244
+        },
+        "bedroom_living": {
+          "total_samples": 2315,
+          "positive_count": 2214,
+          "positive_rate": 0.9564,
+          "precision": 0.9857,
+          "recall": 0.9995,
+          "f1_score": 0.9926
+        },
+        "bathroom_living": {
+          "total_samples": 2056,
+          "positive_count": 879,
+          "positive_rate": 0.4275,
+          "precision": 0.5159,
+          "recall": 0.8692,
+          "f1_score": 0.6475
+        },
+        "bedroom_bedroom": {
+          "total_samples": 1985,
+          "positive_count": 0,
+          "positive_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "kitchen_living": {
+          "total_samples": 183,
+          "positive_count": 175,
+          "positive_rate": 0.9563,
+          "precision": 0.9563,
+          "recall": 1.0,
+          "f1_score": 0.9777
+        }
+      }
+    },
+    "rf_depth16_balanced": {
+      "config": {
+        "name": "rf_depth16_balanced",
+        "n_est": 100,
+        "max_depth": 16,
+        "min_split": 10,
+        "cw": "balanced"
+      },
+      "fit_time_seconds": 12.45,
+      "metrics_at_0.5": {
+        "threshold": 0.5,
+        "accuracy": 0.8468,
+        "precision": 0.7448,
+        "recall": 0.7811,
+        "f1_score": 0.7626,
+        "roc_auc": 0.9313,
+        "brier_score": 0.1026,
+        "confusion_matrix": {
+          "true_negatives": 8457,
+          "false_positives": 1186,
+          "false_negatives": 970,
+          "true_positives": 3462
+        }
+      },
+      "metrics_at_optimal_threshold": {
+        "threshold": 0.54,
+        "accuracy": 0.8558,
+        "precision": 0.7897,
+        "recall": 0.7389,
+        "f1_score": 0.7635,
+        "roc_auc": 0.9313,
+        "brier_score": 0.1026,
+        "confusion_matrix": {
+          "true_negatives": 8771,
+          "false_positives": 872,
+          "false_negatives": 1157,
+          "true_positives": 3275
+        }
+      },
+      "optimal_threshold": 0.5399999999999998,
+      "slices": {
+        "bathroom_bedroom": {
+          "total_samples": 5212,
+          "positive_count": 1147,
+          "positive_rate": 0.2201,
+          "precision": 0.4574,
+          "recall": 0.1264,
+          "f1_score": 0.1981
+        },
+        "bedroom_living": {
+          "total_samples": 2315,
+          "positive_count": 2214,
+          "positive_rate": 0.9564,
+          "precision": 0.9875,
+          "recall": 0.9982,
+          "f1_score": 0.9928
+        },
+        "bathroom_living": {
+          "total_samples": 2056,
+          "positive_count": 879,
+          "positive_rate": 0.4275,
+          "precision": 0.5284,
+          "recall": 0.8362,
+          "f1_score": 0.6476
+        },
+        "bedroom_bedroom": {
+          "total_samples": 1985,
+          "positive_count": 0,
+          "positive_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "kitchen_living": {
+          "total_samples": 183,
+          "positive_count": 175,
+          "positive_rate": 0.9563,
+          "precision": 0.9563,
+          "recall": 1.0,
+          "f1_score": 0.9777
+        }
+      }
+    },
+    "rf_depth16_subsample": {
+      "config": {
+        "name": "rf_depth16_subsample",
+        "n_est": 150,
+        "max_depth": 16,
+        "min_split": 5,
+        "cw": "balanced_subsample"
+      },
+      "fit_time_seconds": 19.41,
+      "metrics_at_0.5": {
+        "threshold": 0.5,
+        "accuracy": 0.8509,
+        "precision": 0.7578,
+        "recall": 0.7739,
+        "f1_score": 0.7658,
+        "roc_auc": 0.9314,
+        "brier_score": 0.101,
+        "confusion_matrix": {
+          "true_negatives": 8547,
+          "false_positives": 1096,
+          "false_negatives": 1002,
+          "true_positives": 3430
+        }
+      },
+      "metrics_at_optimal_threshold": {
+        "threshold": 0.5,
+        "accuracy": 0.8509,
+        "precision": 0.7578,
+        "recall": 0.7739,
+        "f1_score": 0.7658,
+        "roc_auc": 0.9314,
+        "brier_score": 0.101,
+        "confusion_matrix": {
+          "true_negatives": 8547,
+          "false_positives": 1096,
+          "false_negatives": 1002,
+          "true_positives": 3430
+        }
+      },
+      "optimal_threshold": 0.49999999999999983,
+      "slices": {
+        "bathroom_bedroom": {
+          "total_samples": 5212,
+          "positive_count": 1147,
+          "positive_rate": 0.2201,
+          "precision": 0.4328,
+          "recall": 0.2415,
+          "f1_score": 0.31
+        },
+        "bedroom_living": {
+          "total_samples": 2315,
+          "positive_count": 2214,
+          "positive_rate": 0.9564,
+          "precision": 0.9888,
+          "recall": 0.9977,
+          "f1_score": 0.9933
+        },
+        "bathroom_living": {
+          "total_samples": 2056,
+          "positive_count": 879,
+          "positive_rate": 0.4275,
+          "precision": 0.5231,
+          "recall": 0.8635,
+          "f1_score": 0.6515
+        },
+        "bedroom_bedroom": {
+          "total_samples": 1985,
+          "positive_count": 0,
+          "positive_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "kitchen_living": {
+          "total_samples": 183,
+          "positive_count": 175,
+          "positive_rate": 0.9563,
+          "precision": 0.9563,
+          "recall": 1.0,
+          "f1_score": 0.9777
+        }
+      }
+    },
+    "rf_custom_weight": {
+      "config": {
+        "name": "rf_custom_weight",
+        "n_est": 100,
+        "max_depth": 14,
+        "min_split": 8,
+        "cw": {
+          "0": 1.0,
+          "1": 1.8
+        }
+      },
+      "fit_time_seconds": 12.36,
+      "metrics_at_0.5": {
+        "threshold": 0.5,
+        "accuracy": 0.8575,
+        "precision": 0.8112,
+        "recall": 0.7137,
+        "f1_score": 0.7593,
+        "roc_auc": 0.93,
+        "brier_score": 0.0984,
+        "confusion_matrix": {
+          "true_negatives": 8907,
+          "false_positives": 736,
+          "false_negatives": 1269,
+          "true_positives": 3163
+        }
+      },
+      "metrics_at_optimal_threshold": {
+        "threshold": 0.48,
+        "accuracy": 0.8548,
+        "precision": 0.7868,
+        "recall": 0.7394,
+        "f1_score": 0.7624,
+        "roc_auc": 0.93,
+        "brier_score": 0.0984,
+        "confusion_matrix": {
+          "true_negatives": 8755,
+          "false_positives": 888,
+          "false_negatives": 1155,
+          "true_positives": 3277
+        }
+      },
+      "optimal_threshold": 0.47999999999999987,
+      "slices": {
+        "bathroom_bedroom": {
+          "total_samples": 5212,
+          "positive_count": 1147,
+          "positive_rate": 0.2201,
+          "precision": 0.46,
+          "recall": 0.1203,
+          "f1_score": 0.1907
+        },
+        "bedroom_living": {
+          "total_samples": 2315,
+          "positive_count": 2214,
+          "positive_rate": 0.9564,
+          "precision": 0.9866,
+          "recall": 0.9991,
+          "f1_score": 0.9928
+        },
+        "bathroom_living": {
+          "total_samples": 2056,
+          "positive_count": 879,
+          "positive_rate": 0.4275,
+          "precision": 0.5218,
+          "recall": 0.8441,
+          "f1_score": 0.6449
+        },
+        "bedroom_bedroom": {
+          "total_samples": 1985,
+          "positive_count": 0,
+          "positive_rate": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "kitchen_living": {
+          "total_samples": 183,
+          "positive_count": 175,
+          "positive_rate": 0.9563,
+          "precision": 0.9563,
+          "recall": 1.0,
+          "f1_score": 0.9777
+        }
+      }
+    }
+  },
+  "test_evaluation": {
+    "door_v2_at_05": {
+      "threshold": 0.5,
+      "accuracy": 0.8561,
+      "precision": 0.7667,
+      "recall": 0.7736,
+      "f1_score": 0.7701,
+      "roc_auc": 0.9347,
+      "brier_score": 0.0978,
+      "confusion_matrix": {
+        "true_negatives": 8836,
+        "false_positives": 1054,
+        "false_negatives": 1014,
+        "true_positives": 3464
+      }
+    },
+    "door_v2_at_optimal_threshold": {
+      "threshold": 0.5,
+      "accuracy": 0.8561,
+      "precision": 0.7667,
+      "recall": 0.7736,
+      "f1_score": 0.7701,
+      "roc_auc": 0.9347,
+      "brier_score": 0.0978,
+      "confusion_matrix": {
+        "true_negatives": 8836,
+        "false_positives": 1054,
+        "false_negatives": 1014,
+        "true_positives": 3464
+      }
+    },
+    "door_v2_calibrated_at_05": {
+      "threshold": 0.5,
+      "accuracy": 0.8667,
+      "precision": 0.8406,
+      "recall": 0.7063,
+      "f1_score": 0.7676,
+      "roc_auc": 0.9347,
+      "brier_score": 0.0906,
+      "confusion_matrix": {
+        "true_negatives": 9290,
+        "false_positives": 600,
+        "false_negatives": 1315,
+        "true_positives": 3163
+      }
+    },
+    "door_v2_calibrated_at_optimal": {
+      "threshold": 0.34,
+      "accuracy": 0.8543,
+      "precision": 0.7571,
+      "recall": 0.7843,
+      "f1_score": 0.7704,
+      "roc_auc": 0.9347,
+      "brier_score": 0.0906,
+      "confusion_matrix": {
+        "true_negatives": 8763,
+        "false_positives": 1127,
+        "false_negatives": 966,
+        "true_positives": 3512
+      }
+    },
+    "door_v2_slices": {
+      "bathroom_bedroom": {
+        "total_samples": 5340,
+        "positive_count": 1141,
+        "positive_rate": 0.2137,
+        "precision": 0.4206,
+        "recall": 0.2252,
+        "f1_score": 0.2934
+      },
+      "bedroom_living": {
+        "total_samples": 2307,
+        "positive_count": 2238,
+        "positive_rate": 0.9701,
+        "precision": 0.9916,
+        "recall": 0.9991,
+        "f1_score": 0.9953
+      },
+      "bathroom_living": {
+        "total_samples": 2043,
+        "positive_count": 894,
+        "positive_rate": 0.4376,
+        "precision": 0.5356,
+        "recall": 0.8658,
+        "f1_score": 0.6618
+      },
+      "bedroom_bedroom": {
+        "total_samples": 2027,
+        "positive_count": 1,
+        "positive_rate": 0.0005,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0
+      },
+      "kitchen_living": {
+        "total_samples": 200,
+        "positive_count": 191,
+        "positive_rate": 0.955,
+        "precision": 0.9598,
+        "recall": 1.0,
+        "f1_score": 0.9795
+      }
+    },
+    "adj_v2_at_05": {
+      "threshold": 0.5,
+      "accuracy": 0.7529,
+      "precision": 0.8541,
+      "recall": 0.6404,
+      "f1_score": 0.732,
+      "roc_auc": 0.8457,
+      "brier_score": 0.1578,
+      "confusion_matrix": {
+        "true_negatives": 5968,
+        "false_positives": 828,
+        "false_negatives": 2723,
+        "true_positives": 4849
+      }
+    },
+    "adj_v2_at_optimal_threshold": {
+      "threshold": 0.34,
+      "accuracy": 0.7331,
+      "precision": 0.7051,
+      "recall": 0.8484,
+      "f1_score": 0.7701,
+      "roc_auc": 0.8457,
+      "brier_score": 0.1578,
+      "confusion_matrix": {
+        "true_negatives": 4109,
+        "false_positives": 2687,
+        "false_negatives": 1148,
+        "true_positives": 6424
+      }
+    },
+    "adj_v2_slices": {
+      "bathroom_bedroom": {
+        "total_samples": 5340,
+        "positive_count": 2246,
+        "positive_rate": 0.4206,
+        "precision": 0.4992,
+        "recall": 0.8094,
+        "f1_score": 0.6175
+      },
+      "bedroom_living": {
+        "total_samples": 2307,
+        "positive_count": 2261,
+        "positive_rate": 0.9801,
+        "precision": 0.9891,
+        "recall": 0.9991,
+        "f1_score": 0.9941
+      },
+      "bathroom_living": {
+        "total_samples": 2043,
+        "positive_count": 1610,
+        "positive_rate": 0.7881,
+        "precision": 0.7981,
+        "recall": 0.9969,
+        "f1_score": 0.8865
+      },
+      "bedroom_bedroom": {
+        "total_samples": 2027,
+        "positive_count": 617,
+        "positive_rate": 0.3044,
+        "precision": 0.5239,
+        "recall": 0.4797,
+        "f1_score": 0.5008
+      },
+      "kitchen_living": {
+        "total_samples": 200,
+        "positive_count": 200,
+        "positive_rate": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+      }
+    }
+  }
+}

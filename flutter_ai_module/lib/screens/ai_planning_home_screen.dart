@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../providers/plan_provider.dart';
+import '../widgets/saved_plans_bottom_sheet.dart';
 import 'plot_form_screen.dart';
 import 'settings_screen.dart';
 import 'plan_results_screen.dart';
@@ -33,6 +34,17 @@ class AiPlanningHomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.folder_open_outlined),
+            tooltip: 'Saved Plans',
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => const SavedPlansBottomSheet(),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Gateway Settings',

@@ -1,0 +1,12 @@
+{
+  "door_optimal_threshold": 0.49999999999999983,
+  "door_calibrated_threshold": 0.33999999999999997,
+  "adjacency_optimal_threshold": 0.33999999999999997,
+  "best_door_config": {
+    "name": "rf_depth16_subsample",
+    "n_est": 150,
+    "max_depth": 16,
+    "min_split": 5,
+    "cw": "balanced_subsample"
+  }
+}

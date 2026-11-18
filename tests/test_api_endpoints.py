@@ -114,3 +114,49 @@ def test_generate_plan_missing_required_fields():
     assert response.status_code == 422
     data = response.json()
     assert data["status"] == "error"
+
+
+def test_generate_plan_multi_floor_rejected():
+    """Verify endpoint rejects multi-floor layout requests exceeding 2 floors."""
+    payload = {
+        "plot": {
+            "plot_length": 45.0,
+            "plot_width": 25.0,
+            "front_width": 25.0,
+            "entrance_orientation": "South",
+        },
+        "requirements": {
+            "floors": 3,
+        },
+    }
+    response = client.post("/api/v1/plans/generate", json=payload)
+    assert response.status_code == 422
+    data = response.json()
+    assert data["status"] == "error"
+
+
+def test_generate_plan_multi_floor_success():
+    """Verify endpoint successfully generates Phase 6 multi-floor plans for floors=2."""
+    payload = {
+        "plot": {
+            "plot_length": 45.0,
+            "plot_width": 25.0,
+            "front_width": 25.0,
+            "entrance_orientation": "South",
+        },
+        "requirements": {
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "floors": 2,
+            "parking": True,
+        },
+    }
+    response = client.post("/api/v1/plans/generate", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["floors_count"] == 2
+    assert len(data["floor_layouts"]) == 2
+    assert data["svg_ground_floor"] is not None
+    assert data["svg_first_floor"] is not None
+

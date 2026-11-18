@@ -66,6 +66,24 @@ TEST_CASES = [
             parking=True,
         ),
     },
+    {
+        "name": "50x90",
+        "desc": "Spacious 1 Kanal Plot (50x90 ft / 500 sq yd)",
+        "plot": PlotInput(
+            plot_length=90.0,
+            plot_width=50.0,
+            front_width=50.0,
+            entrance_orientation="South",
+            unit="feet",
+        ),
+        "requirements": LayoutRequirements(
+            bedrooms=4,
+            bathrooms=4,
+            kitchen=True,
+            living_room=True,
+            parking=True,
+        ),
+    },
 ]
 
 def main():

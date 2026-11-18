@@ -5,7 +5,7 @@ const express = require('express');
 const axios = require('axios');
 const config = require('../config');
 const authMiddleware = require('../middleware/auth');
-const { validatePlanGenerateRequest } = require('../middleware/validator');
+const { validatePlanGenerateRequest, validatePlanEditRequest } = require('../middleware/validator');
 
 const router = express.Router();
 
@@ -21,6 +21,68 @@ router.post(
     try {
       const response = await axios.post(
         `${config.aiServiceUrl}/api/v1/plans/generate`,
+        req.body,
+        {
+          timeout: config.aiServiceTimeoutMs,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Gateway-User-Id': req.user ? req.user.id : 'anonymous',
+            'X-Gateway-User-Role': req.user ? req.user.role : 'Buyer/Client',
+            'X-Internal-Key': config.internalApiKey,
+          },
+        }
+      );
+
+      return res.status(response.status).json(response.data);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+/**
+ * POST /api/v1/plans/validate-edit
+ * Validates user-edited room geometry
+ */
+router.post(
+  '/validate-edit',
+  authMiddleware,
+  validatePlanEditRequest,
+  async (req, res, next) => {
+    try {
+      const response = await axios.post(
+        `${config.aiServiceUrl}/api/v1/plans/validate-edit`,
+        req.body,
+        {
+          timeout: config.aiServiceTimeoutMs,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Gateway-User-Id': req.user ? req.user.id : 'anonymous',
+            'X-Gateway-User-Role': req.user ? req.user.role : 'Buyer/Client',
+            'X-Internal-Key': config.internalApiKey,
+          },
+        }
+      );
+
+      return res.status(response.status).json(response.data);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+/**
+ * POST /api/v1/plans/apply-edit
+ * Validates and applies user-edited room geometry, regenerating layout
+ */
+router.post(
+  '/apply-edit',
+  authMiddleware,
+  validatePlanEditRequest,
+  async (req, res, next) => {
+    try {
+      const response = await axios.post(
+        `${config.aiServiceUrl}/api/v1/plans/apply-edit`,
         req.body,
         {
           timeout: config.aiServiceTimeoutMs,

@@ -1,0 +1,40 @@
+{
+  "dataset_name": "ResPlan-FP",
+  "dataset_source": "https://huggingface.co/datasets/Tristan12138/resplan-fp",
+  "license": "CC-BY-4.0",
+  "splits": {
+    "train_plans": 2992,
+    "val_plans": 998,
+    "test_plans": 997,
+    "train_pairs": 42348,
+    "val_pairs": 14075,
+    "test_pairs": 14368
+  },
+  "numerical_features": [
+    "plot_width",
+    "plot_length",
+    "plot_area",
+    "plot_aspect_ratio",
+    "total_rooms",
+    "num_bedrooms",
+    "num_bathrooms",
+    "has_living",
+    "has_kitchen",
+    "has_parking",
+    "is_same_category",
+    "room1_area_ratio",
+    "room2_area_ratio",
+    "pair_area_ratio"
+  ],
+  "categorical_features": [
+    "room1_category",
+    "room2_category",
+    "pair_type"
+  ],
+  "total_transformed_features": 35,
+  "targets": [
+    "is_connected",
+    "is_adjacent"
+  ],
+  "training_time_seconds": 6.31
+}

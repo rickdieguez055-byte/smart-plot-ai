@@ -1,0 +1,141 @@
+# ==============================================================================
+# SmartPlot AI — Codemagic CI/CD Pipeline for iOS Builds
+# Project #22 • City University of Science and Information Technology (CUSIT)
+# Supports:
+#   1. Unsigned IPA generation (for Sideloadly, AltStore, TrollStore, verification)
+#   2. Signed IPA generation (Apple Developer Account, Ad Hoc, TestFlight)
+# ==============================================================================
+
+workflows:
+  ios-unsigned-ipa:
+    name: SmartPlot AI — iOS Unsigned IPA (Sideloadly / AltStore / Verification)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        FLUTTER_PROJECT_DIR: "flutter_ai_module"
+        BUNDLE_ID: "com.smartplot.ai.smartplotAiModule"
+    working_directory: flutter_ai_module
+    scripts:
+      - name: Verify Flutter & macOS Environment
+        script: |
+          echo "=== macOS Environment Details ==="
+          sw_vers
+          xcodebuild -version
+          flutter --version
+          which pod
+      - name: Disable Xcode Code Signing for Unsigned Build
+        script: |
+          xcode-project use-profiles --warn-only
+      - name: Get Flutter Packages
+        script: |
+          flutter packages pub get
+      - name: Run Flutter Static Analysis
+        script: |
+          flutter analyze
+      - name: Run Flutter Unit & Widget Tests
+        script: |
+          flutter test
+      - name: Install CocoaPods
+        script: |
+          cd ios
+          pod install --repo-update
+          cd ..
+      - name: Build iOS Release Without Code Signing
+        script: |
+          flutter build ios --release --no-codesign
+      - name: Package Payload into Installable IPA
+        script: |
+          echo "=== Packaging Runner.app into SmartPlot_AI_v1.0.0_unsigned.ipa ==="
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r -9 SmartPlot_AI_v1.0.0_unsigned.ipa Payload
+          mkdir -p ../../ipa
+          mv SmartPlot_AI_v1.0.0_unsigned.ipa ../../ipa/
+          ls -lh ../../ipa/
+    artifacts:
+      - flutter_ai_module/build/ipa/*.ipa
+      - flutter_ai_module/build/ios/iphoneos/Runner.app
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      email:
+        recipients:
+          - dev@smartplot.ai
+        notify:
+          success: true
+          failure: true
+
+  ios-signed-ipa:
+    name: SmartPlot AI — iOS Signed IPA (Ad Hoc / TestFlight / Development)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      groups:
+        # Define these environment variables in Codemagic UI under 'apple_credentials':
+        #   APP_STORE_CONNECT_KEY_IDENTIFIER
+        #   APP_STORE_CONNECT_ISSUER_ID
+        #   APP_STORE_CONNECT_PRIVATE_KEY
+        #   CERTIFICATE_PRIVATE_KEY (optional if using .p12)
+        - apple_credentials
+      vars:
+        FLUTTER_PROJECT_DIR: "flutter_ai_module"
+        XCODE_WORKSPACE: "Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+        BUNDLE_ID: "com.smartplot.ai.smartplotAiModule"
+    working_directory: flutter_ai_module
+    scripts:
+      - name: Set up Keychain
+        script: |
+          keychain initialize
+      - name: Fetch Apple Signing Files via App Store Connect API
+        script: |
+          if [ -n "$APP_STORE_CONNECT_PRIVATE_KEY" ]; then
+            echo "Fetching certificates and provisioning profiles from App Store Connect..."
+            app-store-connect fetch-signing-files "$BUNDLE_ID" \
+              --type IOS_APP_ADHOC \
+              --create
+          else
+            echo "APP_STORE_CONNECT_PRIVATE_KEY not set. Using manual certificates if configured in Codemagic."
+          fi
+      - name: Apply Provisioning Profiles to Xcode Project
+        script: |
+          xcode-project use-profiles
+      - name: Get Flutter Packages
+        script: |
+          flutter packages pub get
+      - name: Run Flutter Static Analysis
+        script: |
+          flutter analyze
+      - name: Run Flutter Unit & Widget Tests
+        script: |
+          flutter test
+      - name: Install CocoaPods
+        script: |
+          cd ios
+          pod install --repo-update
+          cd ..
+      - name: Build Signed iOS IPA
+        script: |
+          if [ -f "$HOME/export_options.plist" ]; then
+            flutter build ipa --release --export-options-plist="$HOME/export_options.plist"
+          else
+            flutter build ipa --release
+          fi
+    artifacts:
+      - flutter_ai_module/build/ios/ipa/*.ipa
+      - flutter_ai_module/build/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      email:
+        recipients:
+          - dev@smartplot.ai
+        notify:
+          success: true
+          failure: true

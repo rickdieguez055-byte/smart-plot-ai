@@ -1,0 +1,142 @@
+{
+  "25x45 ft (5 Marla Standard)": {
+    "Mode A (Pure Rules)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 1.0,
+      "bed_bath_walking_distance": 23.4,
+      "kit_liv_walking_distance": 23.77,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": false,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode B (ML Hybrid)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 2032.2,
+      "bed_bath_walking_distance": 25.32,
+      "kit_liv_walking_distance": 25.4,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode C (Adversarial ML)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 0.0,
+      "bed_bath_walking_distance": 25.32,
+      "kit_liv_walking_distance": 25.4,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    }
+  },
+  "25x50 ft (5 Marla Deep)": {
+    "Mode A (Pure Rules)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 1.0,
+      "bed_bath_walking_distance": 24.73,
+      "kit_liv_walking_distance": 23.17,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": false,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode B (ML Hybrid)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 73.7,
+      "bed_bath_walking_distance": 26.4,
+      "kit_liv_walking_distance": 25.4,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode C (Adversarial ML)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 0.0,
+      "bed_bath_walking_distance": 26.4,
+      "kit_liv_walking_distance": 25.4,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    }
+  },
+  "35x65 ft (10 Marla Luxury)": {
+    "Mode A (Pure Rules)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 1.0,
+      "bed_bath_walking_distance": 38.18,
+      "kit_liv_walking_distance": 39.12,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": false,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode B (ML Hybrid)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 73.0,
+      "bed_bath_walking_distance": 37.76,
+      "kit_liv_walking_distance": 28.67,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode C (Adversarial ML)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 0.0,
+      "bed_bath_walking_distance": 37.76,
+      "kit_liv_walking_distance": 28.67,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    }
+  },
+  "50x90 ft (1 Kanal Estate)": {
+    "Mode A (Pure Rules)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 1.0,
+      "bed_bath_walking_distance": 54.68,
+      "kit_liv_walking_distance": 43.12,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": false,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode B (ML Hybrid)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 71.5,
+      "bed_bath_walking_distance": 54.14,
+      "kit_liv_walking_distance": 32.18,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    },
+    "Mode C (Adversarial ML)": {
+      "feasible": true,
+      "connected": true,
+      "execution_time_ms": 0.0,
+      "bed_bath_walking_distance": 54.14,
+      "kit_liv_walking_distance": 32.18,
+      "bed_bath_adjacent": true,
+      "kit_liv_adjacent": true,
+      "direct_bed_bath_door": false,
+      "total_doors": 10
+    }
+  }
+}

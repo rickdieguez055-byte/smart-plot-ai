@@ -23,6 +23,8 @@ class SVGFloorPlanRenderer:
         "parking": {"fill": "#F8FAFC", "stroke": "#475569", "text": "#1E293B", "badge": "#E2E8F0"},
         "utility": {"fill": "#F9FAFB", "stroke": "#6B7280", "text": "#1F2937", "badge": "#F3F4F6"},
         "circulation": {"fill": "#FAF5FF", "stroke": "#7E22CE", "text": "#581C87", "badge": "#F3E8FF"},
+        "staircase": {"fill": "#FFF7ED", "stroke": "#EA580C", "text": "#7C2D12", "badge": "#FFEDD5"},
+        "terrace": {"fill": "#F0FDF4", "stroke": "#16A34A", "text": "#14532D", "badge": "#DCFCE7"},
     }
 
     @classmethod
@@ -170,21 +172,49 @@ class SVGFloorPlanRenderer:
                 f'fill="{color_theme["fill"]}" stroke="{color_theme["stroke"]}" stroke-width="2.5" rx="2" />'
             )
 
+            # Specialized Architectural Elements
+            if room.category == "staircase":
+                # Draw architectural staircase treads
+                num_treads = 8
+                step_dy = rh / (num_treads + 1)
+                for i in range(1, num_treads + 1):
+                    tread_y = ry + (i * step_dy)
+                    svg_parts.append(
+                        f'<line x1="{rx + 4:.1f}" y1="{tread_y:.1f}" x2="{rx + rw - 4:.1f}" y2="{tread_y:.1f}" '
+                        f'stroke="#EA580C" stroke-width="1.0" stroke-opacity="0.6"/>'
+                    )
+                # Direction indicator
+                is_gf = room.floor == 1 or "gf" in room.id.lower() or "ground" in room.name.lower()
+                dir_text = "UP ↑" if is_gf else "DN ↓"
+                svg_parts.append(
+                    f'<rect x="{center_x - 30:.1f}" y="{center_y - 28:.1f}" width="60" height="16" '
+                    f'fill="#FFEDD5" stroke="#EA580C" stroke-width="1" rx="8" />'
+                )
+                svg_parts.append(
+                    f'<text x="{center_x:.1f}" y="{center_y - 16:.1f}" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">{dir_text}</text>'
+                )
+            elif room.category == "terrace":
+                # Decorative terrace railing outline
+                svg_parts.append(
+                    f'<rect x="{rx + 3:.1f}" y="{ry + 3:.1f}" width="{rw - 6:.1f}" height="{rh - 6:.1f}" '
+                    f'fill="none" stroke="#16A34A" stroke-width="1.2" stroke-dasharray="4,4" />'
+                )
+
             # Room Labels & Dimensions inside room
             center_x = rx + (rw / 2.0)
             center_y = ry + (rh / 2.0)
 
             clean_name = html.escape(room.name)
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y - 10:.1f}" font-size="11" font-weight="700" fill="{color_theme["text"]}" text-anchor="middle">{clean_name}</text>'
+                f'<text x="{center_x:.1f}" y="{center_y - 4 if room.category == "staircase" else center_y - 10:.1f}" font-size="11" font-weight="700" fill="{color_theme["text"]}" text-anchor="middle">{clean_name}</text>'
             )
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y + 6:.1f}" font-size="10" font-weight="500" fill="#475569" text-anchor="middle">'
+                f'<text x="{center_x:.1f}" y="{center_y + 10 if room.category == "staircase" else center_y + 6:.1f}" font-size="10" font-weight="500" fill="#475569" text-anchor="middle">'
                 f'{room.width:.1f} × {room.length:.1f} {unit}'
                 f"</text>"
             )
             svg_parts.append(
-                f'<text x="{center_x:.1f}" y="{center_y + 20:.1f}" font-size="9" fill="#94A3B8" text-anchor="middle">'
+                f'<text x="{center_x:.1f}" y="{center_y + 24 if room.category == "staircase" else center_y + 20:.1f}" font-size="9" fill="#94A3B8" text-anchor="middle">'
                 f'({room.area:.1f} {unit}²)'
                 f"</text>"
             )

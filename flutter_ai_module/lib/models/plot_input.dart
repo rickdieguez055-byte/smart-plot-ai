@@ -33,6 +33,71 @@ class SetbacksModel {
   }
 }
 
+/// Floor-specific requirement model for Phase 6 multi-floor house planning.
+class FloorRequirementModel {
+  final int bedrooms;
+  final int bathrooms;
+  final bool kitchen;
+  final bool livingRoom;
+  final bool drawingRoom;
+  final bool terrace;
+  final bool storeRoom;
+
+  const FloorRequirementModel({
+    this.bedrooms = 1,
+    this.bathrooms = 1,
+    this.kitchen = true,
+    this.livingRoom = true,
+    this.drawingRoom = false,
+    this.terrace = false,
+    this.storeRoom = false,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bedrooms': bedrooms,
+      'bathrooms': bathrooms,
+      'kitchen': kitchen,
+      'living_room': livingRoom,
+      'drawing_room': drawingRoom,
+      'terrace': terrace,
+      'store_room': storeRoom,
+    };
+  }
+
+  factory FloorRequirementModel.fromJson(Map<String, dynamic> json) {
+    return FloorRequirementModel(
+      bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 1,
+      bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 1,
+      kitchen: json['kitchen'] as bool? ?? true,
+      livingRoom: (json['living_room'] ?? json['livingRoom']) as bool? ?? true,
+      drawingRoom: (json['drawing_room'] ?? json['drawingRoom']) as bool? ?? false,
+      terrace: json['terrace'] as bool? ?? false,
+      storeRoom: (json['store_room'] ?? json['storeRoom']) as bool? ?? false,
+    );
+  }
+
+  FloorRequirementModel copyWith({
+    int? bedrooms,
+    int? bathrooms,
+    bool? kitchen,
+    bool? livingRoom,
+    bool? drawingRoom,
+    bool? terrace,
+    bool? storeRoom,
+  }) {
+    return FloorRequirementModel(
+      bedrooms: bedrooms ?? this.bedrooms,
+      bathrooms: bathrooms ?? this.bathrooms,
+      kitchen: kitchen ?? this.kitchen,
+      livingRoom: livingRoom ?? this.livingRoom,
+      drawingRoom: drawingRoom ?? this.drawingRoom,
+      terrace: terrace ?? this.terrace,
+      storeRoom: storeRoom ?? this.storeRoom,
+    );
+  }
+}
+
 /// Plot input model matching SP-AI-01, SP-AI-02, SP-AI-03.
 class PlotInput {
   final double plotLength;
@@ -52,6 +117,10 @@ class PlotInput {
   final bool diningRoom;
   final bool lawn;
 
+  // Floor-specific requirements for Phase 6 multi-floor layouts
+  final FloorRequirementModel? groundFloor;
+  final FloorRequirementModel? firstFloor;
+
   const PlotInput({
     required this.plotLength,
     required this.plotWidth,
@@ -67,6 +136,8 @@ class PlotInput {
     this.parking = true,
     this.diningRoom = false,
     this.lawn = false,
+    this.groundFloor,
+    this.firstFloor,
   });
 
   /// Copy with modifications
@@ -85,6 +156,8 @@ class PlotInput {
     bool? parking,
     bool? diningRoom,
     bool? lawn,
+    FloorRequirementModel? groundFloor,
+    FloorRequirementModel? firstFloor,
   }) {
     return PlotInput(
       plotLength: plotLength ?? this.plotLength,
@@ -101,6 +174,8 @@ class PlotInput {
       parking: parking ?? this.parking,
       diningRoom: diningRoom ?? this.diningRoom,
       lawn: lawn ?? this.lawn,
+      groundFloor: groundFloor ?? this.groundFloor,
+      firstFloor: firstFloor ?? this.firstFloor,
     );
   }
 
@@ -118,11 +193,27 @@ class PlotInput {
     if (frontWidth > plotWidth) {
       return 'Front width ($frontWidth ft) cannot exceed total plot width ($plotWidth ft).';
     }
-    if (bedrooms < 1 || bedrooms > 6) {
-      return 'Bedrooms must be between 1 and 6.';
+    if (floors < 1 || floors > 2) {
+      return 'Floors must be either 1 or 2.';
     }
-    if (bathrooms < 1 || bathrooms > 5) {
-      return 'Bathrooms must be between 1 and 5.';
+    if (floors == 2 && (groundFloor != null || firstFloor != null)) {
+      final gBeds = groundFloor?.bedrooms ?? 1;
+      final fBeds = firstFloor?.bedrooms ?? 1;
+      final gBaths = groundFloor?.bathrooms ?? 1;
+      final fBaths = firstFloor?.bathrooms ?? 1;
+      if (gBeds + fBeds < 1 || gBeds + fBeds > 6) {
+        return 'Total bedrooms across floors must be between 1 and 6.';
+      }
+      if (gBaths + fBaths < 1 || gBaths + fBaths > 5) {
+        return 'Total bathrooms across floors must be between 1 and 5.';
+      }
+    } else {
+      if (bedrooms < 1 || bedrooms > 6) {
+        return 'Bedrooms must be between 1 and 6.';
+      }
+      if (bathrooms < 1 || bathrooms > 5) {
+        return 'Bathrooms must be between 1 and 5.';
+      }
     }
     return null;
   }
@@ -139,18 +230,29 @@ class PlotInput {
       plotMap['setbacks'] = setbacks!.toJson();
     }
 
+    final Map<String, dynamic> reqMap = {
+      'bedrooms': bedrooms,
+      'bathrooms': bathrooms,
+      'floors': floors,
+      'kitchen': kitchen,
+      'living_room': livingRoom,
+      'parking': parking,
+      'dining_room': diningRoom,
+      'lawn': lawn,
+    };
+
+    if (floors == 2) {
+      if (groundFloor != null) {
+        reqMap['ground_floor'] = groundFloor!.toJson();
+      }
+      if (firstFloor != null) {
+        reqMap['first_floor'] = firstFloor!.toJson();
+      }
+    }
+
     return {
       'plot': plotMap,
-      'requirements': {
-        'bedrooms': bedrooms,
-        'bathrooms': bathrooms,
-        'floors': floors,
-        'kitchen': kitchen,
-        'living_room': livingRoom,
-        'parking': parking,
-        'dining_room': diningRoom,
-        'lawn': lawn,
-      },
+      'requirements': reqMap,
     };
   }
 }

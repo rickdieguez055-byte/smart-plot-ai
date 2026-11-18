@@ -66,6 +66,53 @@ function validatePlanGenerateRequest(req, res, next) {
     }
     if (requirements.floors !== undefined && (typeof requirements.floors !== 'number' || requirements.floors < 1)) {
       errors.push({ field: 'requirements.floors', message: 'Floors must be a positive integer (minimum 1).' });
+    } else if (requirements.floors !== undefined && requirements.floors > 2) {
+      errors.push({
+        field: 'requirements.floors',
+        message: 'Multi-floor generation supports up to 2 floors (Ground + First Floor) in Phase 6.',
+      });
+    }
+
+    // Floor-specific validation
+    if (requirements.floors === 1 && requirements.first_floor) {
+      errors.push({
+        field: 'requirements.first_floor',
+        message: 'first_floor requirements cannot be specified for single-story layouts (floors=1).',
+      });
+    }
+
+    if (requirements.ground_floor) {
+      if (typeof requirements.ground_floor !== 'object') {
+        errors.push({ field: 'requirements.ground_floor', message: 'ground_floor must be an object.' });
+      } else {
+        if (requirements.ground_floor.bedrooms !== undefined && (typeof requirements.ground_floor.bedrooms !== 'number' || requirements.ground_floor.bedrooms < 0)) {
+          errors.push({ field: 'requirements.ground_floor.bedrooms', message: 'Ground floor bedrooms must be an integer (>= 0).' });
+        }
+        if (requirements.ground_floor.bathrooms !== undefined && (typeof requirements.ground_floor.bathrooms !== 'number' || requirements.ground_floor.bathrooms < 0)) {
+          errors.push({ field: 'requirements.ground_floor.bathrooms', message: 'Ground floor bathrooms must be an integer (>= 0).' });
+        }
+      }
+    }
+
+    if (requirements.first_floor) {
+      if (typeof requirements.first_floor !== 'object') {
+        errors.push({ field: 'requirements.first_floor', message: 'first_floor must be an object.' });
+      } else {
+        if (requirements.first_floor.bedrooms !== undefined && (typeof requirements.first_floor.bedrooms !== 'number' || requirements.first_floor.bedrooms < 0)) {
+          errors.push({ field: 'requirements.first_floor.bedrooms', message: 'First floor bedrooms must be an integer (>= 0).' });
+        }
+        if (requirements.first_floor.bathrooms !== undefined && (typeof requirements.first_floor.bathrooms !== 'number' || requirements.first_floor.bathrooms < 0)) {
+          errors.push({ field: 'requirements.first_floor.bathrooms', message: 'First floor bathrooms must be an integer (>= 0).' });
+        }
+      }
+    }
+
+    if (requirements.ground_floor && requirements.first_floor) {
+      const gfBeds = requirements.ground_floor.bedrooms || 0;
+      const f1Beds = requirements.first_floor.bedrooms || 0;
+      if (gfBeds + f1Beds < 1) {
+        errors.push({ field: 'requirements', message: 'At least 1 bedroom must be specified across the residence.' });
+      }
     }
   }
 
@@ -81,6 +128,29 @@ function validatePlanGenerateRequest(req, res, next) {
   next();
 }
 
+function validatePlanEditRequest(req, res, next) {
+  const { plot, rooms } = req.body || {};
+
+  if (!plot) {
+    return res.status(400).json({
+      status: 'error',
+      code: 'MISSING_PLOT_PAYLOAD',
+      message: 'Plot specifications object is required under "plot" field.',
+    });
+  }
+
+  if (!rooms || !Array.isArray(rooms) || rooms.length === 0) {
+    return res.status(400).json({
+      status: 'error',
+      code: 'INVALID_ROOMS_PAYLOAD',
+      message: 'Rooms array is required and must contain at least one room.',
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   validatePlanGenerateRequest,
+  validatePlanEditRequest,
 };

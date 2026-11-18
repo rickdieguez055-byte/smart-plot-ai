@@ -32,6 +32,7 @@ class DoorOutput(BaseModel):
     wall: str = Field(..., description="Wall orientation where door sits (north, south, east, west)")
     is_exterior: bool = Field(default=False, description="Whether this is an exterior door")
     swing: str = Field(default="inward", description="Door swing direction")
+    floor: int = Field(default=1, description="Floor level (1 for Ground, 2 for First)")
 
 
 class WindowOutput(BaseModel):
@@ -42,6 +43,7 @@ class WindowOutput(BaseModel):
     width: float = Field(default=4.0, description="Window width in feet/meters")
     wall: str = Field(..., description="Wall orientation where window sits (north, south, east, west)")
     exterior_facing: str = Field(..., description="Exterior facing direction (front, rear, left, right)")
+    floor: int = Field(default=1, description="Floor level (1 for Ground, 2 for First)")
 
 
 class CirculationPathOutput(BaseModel):
@@ -52,6 +54,7 @@ class CirculationPathOutput(BaseModel):
     width: float = Field(..., description="Corridor width")
     length: float = Field(..., description="Corridor length")
     area: float = Field(..., description="Circulation area")
+    floor: int = Field(default=1, description="Floor level (1 for Ground, 2 for First)")
 
 
 class SpatialBreakdownOutput(BaseModel):
@@ -63,6 +66,17 @@ class SpatialBreakdownOutput(BaseModel):
     setback_area: float = Field(default=0.0, description="Dedicated boundary setback area")
     total_covered_area: float = Field(..., description="Total covered footprint (rooms + circulation + walls)")
     utilization_percentage: float = Field(..., description="Percentage of plot covered by building footprint")
+
+    # Granular area accounting per Task 2
+    ground_covered_footprint: Optional[float] = Field(default=None, description="Ground floor covered footprint")
+    first_covered_footprint: Optional[float] = Field(default=None, description="First floor covered footprint")
+    room_usable_area: Optional[float] = Field(default=None, description="Habitable room usable carpet area")
+    staircase_area: Optional[float] = Field(default=None, description="Vertical staircase shaft footprint / opening")
+    terrace_balcony_area: Optional[float] = Field(default=0.0, description="Open-to-sky terrace / balcony area (excluded from covered footprint)")
+    total_constructed_floor_area: Optional[float] = Field(default=None, description="Total constructed structural slab area including covered footprint and terrace slabs")
+    uncovered_area: Optional[float] = Field(default=None, description="Total uncovered open area (setbacks + open terraces + open ducts/lawns)")
+    conservation_verified: bool = Field(default=True, description="Whether mathematical conservation check passed (|sum - total| <= tolerance)")
+    conservation_discrepancy: float = Field(default=0.0, description="Absolute difference in mathematical conservation check")
 
 
 class PlotDimensionsOutput(BaseModel):
@@ -82,6 +96,21 @@ class RecommendationOutput(BaseModel):
     score: Optional[float] = Field(default=None, description="Score or index metric if applicable")
 
 
+class FloorLayoutOutput(BaseModel):
+    """Segregated per-floor architectural layout with individual drawing and circulation topology."""
+    floor: int = Field(..., description="Floor number (1 for Ground Floor, 2 for First Floor)")
+    name: str = Field(..., description="Floor name (e.g., 'Ground Floor Plan', 'First Floor Plan')")
+    rooms: List[RoomOutput] = Field(default_factory=list, description="Rooms located on this floor")
+    circulation_paths: List[CirculationPathOutput] = Field(default_factory=list, description="Circulation paths on this floor")
+    doors: List[DoorOutput] = Field(default_factory=list, description="Doors on this floor")
+    windows: List[WindowOutput] = Field(default_factory=list, description="Windows on this floor")
+    spatial_breakdown: SpatialBreakdownOutput = Field(..., description="Spatial area breakdown for this floor")
+    svg_floor_plan: str = Field(..., description="Dedicated 2D architectural SVG rendering for this floor")
+    staircase_bounding_box: Optional[Dict[str, float]] = Field(
+        default=None, description="Exact x, y, width, length of aligned vertical stair core"
+    )
+
+
 class PlanAlternative(BaseModel):
     """A distinct feasible layout alternative (e.g. Plan A: Open Living vs Plan B: Privacy Focused)."""
     layout_type: str = Field(..., description="e.g. 'open_living' or 'privacy_focused'")
@@ -96,6 +125,14 @@ class PlanAlternative(BaseModel):
     recommendations: List[RecommendationOutput] = Field(default_factory=list, description="Specific recommendations")
     is_feasible: bool = Field(default=True, description="Whether design passed all feasibility checks")
     connectivity_verified: bool = Field(default=True, description="Whether all rooms are reachably connected")
+    generation_mode: str = Field(default="ml_hybrid", description="Mode of generation: 'ml_hybrid' or 'baseline_fallback'")
+    fallback_reason: Optional[str] = Field(default=None, description="Detailed reason if fallen back to baseline")
+    floors_count: int = Field(default=1, description="Total number of floors (1 or 2)")
+    floor_layouts: List[FloorLayoutOutput] = Field(default_factory=list, description="Segregated per-floor layouts with individual SVGs")
+    svg_ground_floor: Optional[str] = Field(default=None, description="Ground floor SVG rendering")
+    svg_first_floor: Optional[str] = Field(default=None, description="First floor SVG rendering")
+    staircase_aligned: bool = Field(default=False, description="Whether 3D staircase vertical core is aligned")
+    staircase_validation: Optional[Dict[str, Any]] = Field(default=None, description="Detailed staircase geometry and clearance verification")
 
 
 class PlanGenerateResponse(BaseModel):
@@ -112,7 +149,7 @@ class PlanGenerateResponse(BaseModel):
     disclaimer: str = Field(default=MANDATORY_DISCLAIMER, description="Mandatory SP-AI-10 disclaimer notice")
     metadata: Dict[str, Any] = Field(default_factory=dict, description="Execution and solver metadata")
 
-    # Phase 2 Enhanced Fields
+    # Phase 2 & 6 Enhanced Fields
     spatial_breakdown: Optional[SpatialBreakdownOutput] = Field(
         default=None, description="Granular spatial calculations (rooms, circulation, walls, open space)"
     )
@@ -122,6 +159,11 @@ class PlanGenerateResponse(BaseModel):
     alternatives: List[PlanAlternative] = Field(
         default_factory=list, description="Distinct layout alternatives (e.g. Plan A Open Living vs Plan B Privacy Focused)"
     )
+    floors_count: int = Field(default=1, description="Total number of floors (1 or 2)")
+    floor_layouts: List[FloorLayoutOutput] = Field(default_factory=list, description="Segregated per-floor layouts with individual SVGs")
+    svg_ground_floor: Optional[str] = Field(default=None, description="Ground floor SVG rendering")
+    svg_first_floor: Optional[str] = Field(default=None, description="First floor SVG rendering")
+    staircase_validation: Optional[Dict[str, Any]] = Field(default=None, description="Detailed staircase geometry and clearance verification")
 
 
 class ErrorResponse(BaseModel):

@@ -925,6 +925,15 @@ class SpatialLayoutSolver:
             setback_area=setback_area,
             total_covered_area=total_covered_area,
             utilization_percentage=utilization_percentage,
+            ground_covered_footprint=total_covered_area,
+            first_covered_footprint=0.0,
+            room_usable_area=net_room_area,
+            staircase_area=0.0,
+            terrace_balcony_area=0.0,
+            total_constructed_floor_area=total_covered_area,
+            uncovered_area=round(setback_area + open_unallocated_area, 2),
+            conservation_verified=abs((total_covered_area + setback_area + open_unallocated_area) - total_plot_area) <= 0.05,
+            conservation_discrepancy=round(abs((total_covered_area + setback_area + open_unallocated_area) - total_plot_area), 4),
         )
 
     # -------------------------------------------------------------------------

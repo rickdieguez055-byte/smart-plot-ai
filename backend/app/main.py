@@ -9,7 +9,9 @@ from backend.app.core.config import settings
 from backend.app.core.errors import PlotValidationException, SpatialInfeasibilityException
 from backend.app.schemas.layout import PlanGenerateRequest
 from backend.app.schemas.response import ErrorResponse, PlanGenerateResponse
+from backend.app.schemas.edit import PlanEditValidationRequest, PlanEditValidationResponse
 from backend.app.services.plan_service import PlanGenerationService
+from backend.app.engine.interactive_editor import InteractivePlanEditor
 
 # Configure logging
 logging.basicConfig(
@@ -135,6 +137,44 @@ async def generate_plan(request: PlanGenerateRequest):
         f"beds={request.requirements.bedrooms if request.requirements else 2}"
     )
     return PlanGenerationService.generate_plan(request)
+
+
+@app.post(
+    "/api/v1/plans/validate-edit",
+    response_model=PlanEditValidationResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Interactive Plan Editing"],
+    summary="Validate User-Modified Room Geometry in Real-Time",
+)
+async def validate_plan_edit(request: PlanEditValidationRequest):
+    """
+    Validates user-modified room geometry against boundary containment,
+    no-overlap, minimum dimensions, staircase alignment, and circulation reachability.
+    """
+    logger.info(
+        f"Plan edit validation request: Floor {request.floor}/{request.floors_count}, "
+        f"{len(request.rooms)} rooms on {request.plot.plot_width}x{request.plot.plot_length} plot."
+    )
+    return InteractivePlanEditor.validate_and_apply_edit(request)
+
+
+@app.post(
+    "/api/v1/plans/apply-edit",
+    response_model=PlanEditValidationResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Interactive Plan Editing"],
+    summary="Apply Validated Plan Edit and Regenerate Layout Elements",
+)
+async def apply_plan_edit(request: PlanEditValidationRequest):
+    """
+    Validates and applies user edits, recalculating doors, windows, walls,
+    and dynamically regenerating the 2D SVG floor plan drawing.
+    """
+    logger.info(
+        f"Apply plan edit request: Floor {request.floor}/{request.floors_count}, "
+        f"{len(request.rooms)} rooms."
+    )
+    return InteractivePlanEditor.validate_and_apply_edit(request)
 
 
 if __name__ == "__main__":
