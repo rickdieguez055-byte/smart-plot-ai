@@ -13,7 +13,9 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
-    let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SmartPlotSharePlugin")
+    guard let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SmartPlotSharePlugin") else {
+      return
+    }
     let shareChannel = FlutterMethodChannel(name: "com.smartplot.ai/share", binaryMessenger: registrar.messenger())
 
     shareChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
