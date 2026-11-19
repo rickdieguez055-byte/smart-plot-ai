@@ -63,13 +63,6 @@ workflows:
       - build/ios/iphoneos/Runner.app
       - flutter_ai_module/build/ios/iphoneos/Runner.app
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      email:
-        recipients:
-          - dev@smartplot.ai
-        notify:
-          success: true
-          failure: true
 
   ios-signed-ipa:
     name: SmartPlot AI — iOS Signed IPA (Ad Hoc / TestFlight / Development)
@@ -136,10 +129,3 @@ workflows:
       - build/ipa/*.ipa
       - flutter_ai_module/build/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      email:
-        recipients:
-          - dev@smartplot.ai
-        notify:
-          success: true
-          failure: true
