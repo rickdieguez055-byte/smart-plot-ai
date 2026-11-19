@@ -1,5 +1,6 @@
 """FastAPI Application entrypoint for SmartPlot AI Microservice."""
 import logging
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,6 +13,7 @@ from backend.app.schemas.response import ErrorResponse, PlanGenerateResponse
 from backend.app.schemas.edit import PlanEditValidationRequest, PlanEditValidationResponse
 from backend.app.services.plan_service import PlanGenerationService
 from backend.app.engine.interactive_editor import InteractivePlanEditor
+from backend.app.ml.model import RoomRelationshipPredictor
 
 # Configure logging
 logging.basicConfig(
@@ -20,6 +22,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger("smartplot.api")
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan event handler: Pre-warms ML models and solvers into memory at startup."""
+    logger.info("Starting SmartPlot AI Microservice...")
+    try:
+        logger.info("Pre-warming RoomRelationshipPredictor ML models (rf_door_v2, rf_adj_v2)...")
+        predictor = RoomRelationshipPredictor.get_instance()
+        logger.info("RoomRelationshipPredictor pre-warmed successfully. Ready for zero-latency inference.")
+    except Exception as exc:
+        logger.warning(f"ML model pre-warming encountered an issue: {exc}. Heuristic fallback ready.")
+    yield
+    logger.info("Shutting down SmartPlot AI Microservice.")
+
+
 app = FastAPI(
     title=settings.APP_NAME,
     description=(
@@ -27,6 +44,7 @@ app = FastAPI(
         "spatial constraint-solving, and 2D floor-plan generation (SP-AI-01 to SP-AI-14)."
     ),
     version="1.0.0",
+    lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
 )

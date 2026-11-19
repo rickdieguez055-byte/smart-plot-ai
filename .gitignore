@@ -54,10 +54,20 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+*token*.txt
+*.token
+*.pem
+*.key
+*.p12
+*.p8
+
 
 # Operating System Files
 .DS_Store
 Thumbs.db
+*.apk
+*.ipa
+
 
 # IDE & Editor Files
 .vscode/

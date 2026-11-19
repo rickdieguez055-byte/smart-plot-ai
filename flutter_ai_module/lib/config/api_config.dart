@@ -4,7 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ApiConfig {
-  static const int requestTimeoutSeconds = 15;
+  static const int requestTimeoutSeconds = 45;
 
   /// Default local gateway port
   static const int defaultPort = 5000;

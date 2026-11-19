@@ -49,13 +49,15 @@ workflows:
           flutter build ios --release --no-codesign
       - name: Package Payload into Installable IPA
         script: |
-          echo "=== Packaging Runner.app into SmartPlot_AI_v1.0.0_unsigned.ipa ==="
+          echo "=== Packaging Runner.app into SmartPlot_AI_Final.ipa ==="
           cd build/ios/iphoneos
           mkdir -p Payload
           cp -r Runner.app Payload/
-          zip -r -9 SmartPlot_AI_v1.0.0_unsigned.ipa Payload
+          zip -r -9 SmartPlot_AI_Final.ipa Payload
+          cp SmartPlot_AI_Final.ipa SmartPlot_AI_v1.0.0_unsigned.ipa
           mkdir -p ../../ipa
-          mv SmartPlot_AI_v1.0.0_unsigned.ipa ../../ipa/
+          mv SmartPlot_AI_Final.ipa ../../ipa/
+          cp SmartPlot_AI_v1.0.0_unsigned.ipa ../../ipa/
           ls -lh ../../ipa/
     artifacts:
       - build/ipa/*.ipa
